@@ -18,7 +18,7 @@ export default async (req: Request, res: Response) => {
     /*esse novo usuario, ja existe no banco?*/
     const { name, email, phone, cep, state, city, neighborhood, street } =
       req.body as ClientProps;
-
+    /* verificação se existe no body a request, se não tiver no body (postman) ele vai acusar. */
     existsOrNot(name, "name");
     existsOrNot(email, "email");
     existsOrNot(phone, "phone");
@@ -34,28 +34,29 @@ export default async (req: Request, res: Response) => {
       },
     });
 
-    if (verifyEmailAlreadyUsed)
-      res.status(400).json("o email está sendo usado");
-
-    const insertClient = await prisma.client.create({
-      data: {
-        name,
-        email,
-        phone,
-        Adress: {
-          create: {
-            cep,
-            state,
-            city,
-            neighborhood,
-            street,
+    if (verifyEmailAlreadyUsed) {
+      return res.status(400).json("o email está sendo usado");
+    } else {
+      const insertClient = await prisma.client.create({
+        data: {
+          name,
+          email,
+          phone,
+          Adress: {
+            create: {
+              cep,
+              state,
+              city,
+              neighborhood,
+              street,
+            },
           },
         },
-      },
-    });
+      });
 
-    res.status(201).json({insertClient});
-    console.log('usuario criado com sucesso');
+      res.status(201).json({ insertClient });
+      console.log("usuario criado com sucesso");
+    }
   } catch (error) {
     console.log(error);
     res.status(400).json("erro");
