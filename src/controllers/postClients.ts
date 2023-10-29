@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { prisma } from "../database";
-import existsOrNot from "../ultils/existsOrNot";
+import existsInReqBody from "../ultils/existsInReqBody";
 
-interface ClientProps {
+export interface ClientProps {
   name: string;
   email: string;
   phone: string;
@@ -19,14 +19,14 @@ export default async (req: Request, res: Response) => {
     const { name, email, phone, cep, state, city, neighborhood, street } =
       req.body as ClientProps;
     /* verificação se existe no body a request, se não tiver no body (postman) ele vai acusar. */
-    existsOrNot(name, "name");
-    existsOrNot(email, "email");
-    existsOrNot(phone, "phone");
-    existsOrNot(cep, "cep");
-    existsOrNot(state, "state");
-    existsOrNot(city, "city");
-    existsOrNot(neighborhood, "neighborhood");
-    existsOrNot(street, "street");
+    existsInReqBody(name, "name");
+    existsInReqBody(email, "email");
+    existsInReqBody(phone, "phone");
+    existsInReqBody(cep, "cep");
+    existsInReqBody(state, "state");
+    existsInReqBody(city, "city");
+    existsInReqBody(neighborhood, "neighborhood");
+    existsInReqBody(street, "street");
 
     const verifyEmailAlreadyUsed = await prisma.client.findFirst({
       where: {

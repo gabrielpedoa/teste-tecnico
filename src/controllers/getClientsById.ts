@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { prisma } from "../database";
+import existsOrNot from "../ultils/existsOrNot";
 
 export default async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
 
-    if (!id) return res.status(400).json("O id é obrigatorio");
+    existsOrNot(id, res);
 
     const getClientsById = await prisma.client.findFirst({
       where: {
